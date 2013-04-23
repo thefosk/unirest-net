@@ -1,3 +1,7 @@
+This is a port of the Unicorn library to .NET. This is a work in progress and presented as-is. I am not affiliated with the original Unicorn library. The official Readme is presented below and may or may not have anything to do with this port.
+
+--------
+
 Unicorn-Java
 ============================================
 
