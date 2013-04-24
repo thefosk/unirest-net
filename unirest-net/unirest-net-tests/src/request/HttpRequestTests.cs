@@ -1,137 +1,187 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-//using NUnit;
-//using NUnit.Framework;
-//using FluentAssertions;
+using NUnit;
+using NUnit.Framework;
+using FluentAssertions;
 
-//using unirest_net;
-//using unirest_net.http;
-//using unirest_net.request;
+using unirest_net;
+using unirest_net.http;
+using unirest_net.request;
 
-//namespace unicorn_net_tests.request
-//{
-//    [TestFixture]
-//    class HttpRequestTests
-//    {
-//        [Test]
-//        public static void HttpRequest_Should_Construct()
-//        {
-//            Action get = () => new HttpRequest(HttpMethod.GET, "http://localhost");
-//            Action Post = () => new HttpRequest(HttpMethod.Post, "http://localhost");
-//            Action delete = () => new HttpRequest(HttpMethod.DELETE, "http://localhost");
-//            Action patch = () => new HttpRequest(HttpMethod.PATCH, "http://localhost");
-//            Action put = () => new HttpRequest(HttpMethod.PUT, "http://localhost");
+using System.Net.Http;
 
-//            get.ShouldNotThrow();
-//            Post.ShouldNotThrow();
-//            delete.ShouldNotThrow();
-//            patch.ShouldNotThrow();
-//            put.ShouldNotThrow();
-//        }
+namespace unicorn_net_tests.request
+{
+    [TestFixture]
+    class HttpRequestTests
+    {
+        [Test]
+        public static void HttpRequest_Should_Construct()
+        {
+            Action Get = () => new HttpRequest(HttpMethod.Get, "http://localhost");
+            Action Post = () => new HttpRequest(HttpMethod.Post, "http://localhost");
+            Action Delete = () => new HttpRequest(HttpMethod.Delete, "http://localhost");
+            Action Patch = () => new HttpRequest(new HttpMethod("PATCH"), "http://localhost");
+            Action Put = () => new HttpRequest(HttpMethod.Put, "http://localhost");
 
-//        [Test]
-//        public static void HttpRequest_Should_Not_Construct_With_Invalid_URL()
-//        {
-//            Action get = () => new HttpRequest(HttpMethod.GET, "http:///invalid");
-//            Action Post = () => new HttpRequest(HttpMethod.Post, "http:///invalid");
-//            Action delete = () => new HttpRequest(HttpMethod.DELETE, "http:///invalid");
-//            Action patch = () => new HttpRequest(HttpMethod.PATCH, "http:///invalid");
-//            Action put = () => new HttpRequest(HttpMethod.PUT, "http:///invalid");
+            Get.ShouldNotThrow();
+            Post.ShouldNotThrow();
+            Delete.ShouldNotThrow();
+            Patch.ShouldNotThrow();
+            Put.ShouldNotThrow();
+        }
 
-//            get.ShouldThrow<ArgumentException>();
-//            Post.ShouldThrow<ArgumentException>();
-//            delete.ShouldThrow<ArgumentException>();
-//            patch.ShouldThrow<ArgumentException>();
-//            put.ShouldThrow<ArgumentException>();
-//        }
+        [Test]
+        public static void HttpRequest_Should_Not_Construct_With_Invalid_URL()
+        {
+            Action Get = () => new HttpRequest(HttpMethod.Get, "http:///invalid");
+            Action Post = () => new HttpRequest(HttpMethod.Post, "http:///invalid");
+            Action Delete = () => new HttpRequest(HttpMethod.Delete, "http:///invalid");
+            Action Patch = () => new HttpRequest(new HttpMethod("PATCH"), "http:///invalid");
+            Action Put = () => new HttpRequest(HttpMethod.Put, "http:///invalid");
 
-//        [Test]
-//        public static void HttpRequest_Should_Not_Construct_With_None_HTTP_URL()
-//        {
-//            Action get = () => new HttpRequest(HttpMethod.GET, "ftp://localhost");
-//            Action Post = () => new HttpRequest(HttpMethod.Post, "mailto:localhost");
-//            Action delete = () => new HttpRequest(HttpMethod.DELETE, "news://localhost");
-//            Action patch = () => new HttpRequest(HttpMethod.PATCH, "about:blank");
-//            Action put = () => new HttpRequest(HttpMethod.PUT, "about:settings");
+            Get.ShouldThrow<ArgumentException>();
+            Post.ShouldThrow<ArgumentException>();
+            Delete.ShouldThrow<ArgumentException>();
+            Patch.ShouldThrow<ArgumentException>();
+            Put.ShouldThrow<ArgumentException>();
+        }
 
-//            get.ShouldThrow<ArgumentException>();
-//            Post.ShouldThrow<ArgumentException>();
-//            delete.ShouldThrow<ArgumentException>();
-//            patch.ShouldThrow<ArgumentException>();
-//            put.ShouldThrow<ArgumentException>();  
-//        }
+        [Test]
+        public static void HttpRequest_Should_Not_Construct_With_None_HTTP_URL()
+        {
+            Action Get = () => new HttpRequest(HttpMethod.Get, "ftp://localhost");
+            Action Post = () => new HttpRequest(HttpMethod.Post, "mailto:localhost");
+            Action Delete = () => new HttpRequest(HttpMethod.Delete, "news://localhost");
+            Action Patch = () => new HttpRequest(new HttpMethod("PATCH"), "about:blank");
+            Action Put = () => new HttpRequest(HttpMethod.Put, "about:settings");
 
-//        [Test]
-//        public static void HttpRequest_Should_Construct_With_Correct_Verb()
-//        {
-//            var get = new HttpRequest(HttpMethod.GET, "http://localhost");
-//            var Post = new HttpRequest(HttpMethod.Post, "http://localhost");
-//            var delete = new HttpRequest(HttpMethod.DELETE, "http://localhost");
-//            var patch = new HttpRequest(HttpMethod.PATCH, "http://localhost");
-//            var put = new HttpRequest(HttpMethod.PUT, "http://localhost");
+            Get.ShouldThrow<ArgumentException>();
+            Post.ShouldThrow<ArgumentException>();
+            Delete.ShouldThrow<ArgumentException>();
+            Patch.ShouldThrow<ArgumentException>();
+            Put.ShouldThrow<ArgumentException>();
+        }
 
-//            get.HttpMethod.Should().Be(HttpMethod.GET);
-//            Post.HttpMethod.Should().Be(HttpMethod.Post);
-//            delete.HttpMethod.Should().Be(HttpMethod.DELETE);
-//            patch.HttpMethod.Should().Be(HttpMethod.PATCH);
-//            put.HttpMethod.Should().Be(HttpMethod.PUT);
-//        }
+        [Test]
+        public static void HttpRequest_Should_Construct_With_Correct_Verb()
+        {
+            var Get = new HttpRequest(HttpMethod.Get, "http://localhost");
+            var Post = new HttpRequest(HttpMethod.Post, "http://localhost");
+            var Delete = new HttpRequest(HttpMethod.Delete, "http://localhost");
+            var Patch = new HttpRequest(new HttpMethod("PATCH"), "http://localhost");
+            var Put = new HttpRequest(HttpMethod.Put, "http://localhost");
 
-//        [Test]
-//        public static void HttpRequest_Should_Construct_With_Correct_URL()
-//        {
-//            var get = new HttpRequest(HttpMethod.GET, "http://localhost");
-//            var Post = new HttpRequest(HttpMethod.Post, "http://localhost");
-//            var delete = new HttpRequest(HttpMethod.DELETE, "http://localhost");
-//            var patch = new HttpRequest(HttpMethod.PATCH, "http://localhost");
-//            var put = new HttpRequest(HttpMethod.PUT, "http://localhost");
+            Get.HttpMethod.Should().Be(HttpMethod.Get);
+            Post.HttpMethod.Should().Be(HttpMethod.Post);
+            Delete.HttpMethod.Should().Be(HttpMethod.Delete);
+            Patch.HttpMethod.Should().Be(new HttpMethod("PATCH"));
+            Put.HttpMethod.Should().Be(HttpMethod.Put);
+        }
 
-//            get.URL.OriginalString.Should().Be("http://localhost");
-//            Post.URL.OriginalString.Should().Be("http://localhost");
-//            delete.URL.OriginalString.Should().Be("http://localhost");
-//            patch.URL.OriginalString.Should().Be("http://localhost");
-//            put.URL.OriginalString.Should().Be("http://localhost");
-//        }
+        [Test]
+        public static void HttpRequest_Should_Construct_With_Correct_URL()
+        {
+            var Get = new HttpRequest(HttpMethod.Get, "http://localhost");
+            var Post = new HttpRequest(HttpMethod.Post, "http://localhost");
+            var Delete = new HttpRequest(HttpMethod.Delete, "http://localhost");
+            var Patch = new HttpRequest(new HttpMethod("PATCH"), "http://localhost");
+            var Put = new HttpRequest(HttpMethod.Put, "http://localhost");
 
-//        [Test]
-//        public static void HttpRequest_Should_Construct_With_Headers()
-//        {
-//            var get = new HttpRequest(HttpMethod.GET, "http://localhost");
-//            var Post = new HttpRequest(HttpMethod.Post, "http://localhost");
-//            var delete = new HttpRequest(HttpMethod.DELETE, "http://localhost");
-//            var patch = new HttpRequest(HttpMethod.PATCH, "http://localhost");
-//            var put = new HttpRequest(HttpMethod.PUT, "http://localhost");
+            Get.URL.OriginalString.Should().Be("http://localhost");
+            Post.URL.OriginalString.Should().Be("http://localhost");
+            Delete.URL.OriginalString.Should().Be("http://localhost");
+            Patch.URL.OriginalString.Should().Be("http://localhost");
+            Put.URL.OriginalString.Should().Be("http://localhost");
+        }
 
-//            get.Headers.Should().NotBeNull();
-//            Post.URL.OriginalString.Should().NotBeNull();
-//            delete.URL.OriginalString.Should().NotBeNull();
-//            patch.URL.OriginalString.Should().NotBeNull();
-//            put.URL.OriginalString.Should().NotBeNull();
-//        }
+        [Test]
+        public static void HttpRequest_Should_Construct_With_Headers()
+        {
+            var Get = new HttpRequest(HttpMethod.Get, "http://localhost");
+            var Post = new HttpRequest(HttpMethod.Post, "http://localhost");
+            var Delete = new HttpRequest(HttpMethod.Delete, "http://localhost");
+            var Patch = new HttpRequest(new HttpMethod("PATCH"), "http://localhost");
+            var Put = new HttpRequest(HttpMethod.Put, "http://localhost");
 
-//        [Test]
-//        public static void HttpRequest_Should_Add_Headers()
-//        {
-//            var get = new HttpRequest(HttpMethod.GET, "http://localhost");
-//            var Post = new HttpRequest(HttpMethod.Post, "http://localhost");
-//            var delete = new HttpRequest(HttpMethod.DELETE, "http://localhost");
-//            var patch = new HttpRequest(HttpMethod.PATCH, "http://localhost");
-//            var put = new HttpRequest(HttpMethod.PUT, "http://localhost");
+            Get.Headers.Should().NotBeNull();
+            Post.URL.OriginalString.Should().NotBeNull();
+            Delete.URL.OriginalString.Should().NotBeNull();
+            Patch.URL.OriginalString.Should().NotBeNull();
+            Put.URL.OriginalString.Should().NotBeNull();
+        }
 
-//            get.header("User-Agent", "unicorn-net/1.0");
-//            Post.header("User-Agent", "unicorn-net/1.0");
-//            delete.header("User-Agent", "unicorn-net/1.0");
-//            patch.header("User-Agent", "unicorn-net/1.0");
-//            put.header("User-Agent", "unicorn-net/1.0");
+        [Test]
+        public static void HttpRequest_Should_Add_Headers()
+        {
+            var Get = new HttpRequest(HttpMethod.Get, "http://localhost");
+            var Post = new HttpRequest(HttpMethod.Post, "http://localhost");
+            var Delete = new HttpRequest(HttpMethod.Delete, "http://localhost");
+            var Patch = new HttpRequest(new HttpMethod("PATCH"), "http://localhost");
+            var Put = new HttpRequest(HttpMethod.Put, "http://localhost");
 
-//            get.Headers.Should().Contain("User-Agent", "unicorn-net/1.0");
-//            Post.Headers.Should().Contain("User-Agent", "unicorn-net/1.0");
-//            delete.Headers.Should().Contain("User-Agent", "unicorn-net/1.0");
-//            patch.Headers.Should().Contain("User-Agent", "unicorn-net/1.0");
-//            put.Headers.Should().Contain("User-Agent", "unicorn-net/1.0");
-//        }
-//    }
-//}
+            Get.header("User-Agent", "unirest-net/1.0");
+            Post.header("User-Agent", "unirest-net/1.0");
+            Delete.header("User-Agent", "unirest-net/1.0");
+            Patch.header("User-Agent", "unirest-net/1.0");
+            Put.header("User-Agent", "unirest-net/1.0");
+
+            Get.Headers.Should().Contain("User-Agent", "unirest-net/1.0");
+            Post.Headers.Should().Contain("User-Agent", "unirest-net/1.0");
+            Delete.Headers.Should().Contain("User-Agent", "unirest-net/1.0");
+            Patch.Headers.Should().Contain("User-Agent", "unirest-net/1.0");
+            Put.Headers.Should().Contain("User-Agent", "unirest-net/1.0");
+        }
+
+        [Test]
+        public static void HttpRequest_Should_Return_String()
+        {
+            var Get = new HttpRequest(HttpMethod.Get, "http://www.google.com");
+            var Post = new HttpRequest(HttpMethod.Post, "http://www.google.com");
+            var Delete = new HttpRequest(HttpMethod.Delete, "http://www.google.com");
+            var Patch = new HttpRequest(new HttpMethod("PATCH"), "http://www.google.com");
+            var Put = new HttpRequest(HttpMethod.Put, "http://www.google.com");
+
+            Get.asString().Body.Should().NotBeBlank();
+            Post.asString().Body.Should().NotBeBlank();
+            Delete.asString().Body.Should().NotBeBlank();
+            Patch.asString().Body.Should().NotBeBlank();
+            Put.asString().Body.Should().NotBeBlank();
+        }
+
+        [Test]
+        public static void HttpRequest_Should_Return_Stream()
+        {
+            var Get = new HttpRequest(HttpMethod.Get, "http://www.google.com");
+            var Post = new HttpRequest(HttpMethod.Post, "http://www.google.com");
+            var Delete = new HttpRequest(HttpMethod.Delete, "http://www.google.com");
+            var Patch = new HttpRequest(new HttpMethod("PATCH"), "http://www.google.com");
+            var Put = new HttpRequest(HttpMethod.Put, "http://www.google.com");
+
+            Get.asBinary().Body.Should().NotBeNull();
+            Post.asBinary().Body.Should().NotBeNull();
+            Delete.asBinary().Body.Should().NotBeNull();
+            Patch.asBinary().Body.Should().NotBeNull();
+            Put.asBinary().Body.Should().NotBeNull();
+        }
+
+        [Test]
+        public static void HttpRequest_Should_Return_Parsed_JSON()
+        {
+            var Get = new HttpRequest(HttpMethod.Get, "http://www.google.com");
+            var Post = new HttpRequest(HttpMethod.Post, "http://www.google.com");
+            var Delete = new HttpRequest(HttpMethod.Delete, "http://www.google.com");
+            var Patch = new HttpRequest(new HttpMethod("PATCH"), "http://www.google.com");
+            var Put = new HttpRequest(HttpMethod.Put, "http://www.google.com");
+
+            Get.asJson<String>().Body.Should().NotBeBlank();
+            Post.asJson<String>().Body.Should().NotBeBlank();
+            Delete.asJson<String>().Body.Should().NotBeBlank();
+            Patch.asJson<String>().Body.Should().NotBeBlank();
+            Put.asJson<String>().Body.Should().NotBeBlank();
+        }
+    }
+}

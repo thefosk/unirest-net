@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 using System.Net.Http;
-
+using System.Threading.Tasks;
 using unirest_net;
 using unirest_net.http;
 using unirest_net.request;
@@ -13,13 +13,14 @@ namespace unirest_net.http
 {
     public class HttpClientHelper
     {
-        private const string USER_AGENT = "unicorn-java/1.0";
-        private const int CONNECTION_TIMEOUT = 600000;
-        private const int SOCKET_TIMEOUT = 600000;
+        private const string USER_AGENT = "unirest-java/1.0";
 
         public static HttpResponse<T> Request<T>(BaseRequest request)
         {
-            request.Headers.Add("user-agent", USER_AGENT);
+            if (!request.Headers.ContainsKey("user-agent"))
+            {
+                request.Headers.Add("user-agent", USER_AGENT);
+            }
 
             var client = new HttpClient();
             var msg = new HttpRequestMessage(request.HttpMethod, request.URL);
@@ -31,10 +32,14 @@ namespace unirest_net.http
 
             if (request is HttpRequestWithBody)
             {
-                
+                msg.Content = new StreamContent((request as HttpRequestWithBody).Body);
             }
 
-            return null;
+            var responseTask = client.SendAsync(msg);
+            Task.WaitAll(responseTask);
+            var response = responseTask.Result;
+
+            return new HttpResponse<T>(response);
         }
     }
 }

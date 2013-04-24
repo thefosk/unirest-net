@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -51,6 +52,16 @@ namespace unirest_net.request
         public HttpResponse<String> asString()
         {
             return HttpClientHelper.Request<String>(this);
+        }
+
+        public HttpResponse<Stream> asBinary()
+        {
+            return HttpClientHelper.Request<Stream>(this);
+        }
+
+        public HttpResponse<T> asJson<T>()
+        {
+            return HttpClientHelper.Request<T>(this);
         }
     }
 }
