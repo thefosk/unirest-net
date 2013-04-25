@@ -17,9 +17,9 @@ namespace unirest_net.http
             return new HttpRequest(HttpMethod.Get, url);
         }
 
-        public static HttpRequestWithBody Post(string url)
+        public static HttpRequest Post(string url)
         {
-            return new HttpRequestWithBody(HttpMethod.Post, url);
+            return new HttpRequest(HttpMethod.Post, url);
         }
 
         public static HttpRequest delete(string url)
@@ -27,14 +27,14 @@ namespace unirest_net.http
             return new HttpRequest(HttpMethod.Delete, url);
         }
 
-        public static HttpRequestWithBody patch(string url)
+        public static HttpRequest patch(string url)
         {
-            return new HttpRequestWithBody(new HttpMethod("PATCH"), url);
+            return new HttpRequest(new HttpMethod("PATCH"), url);
         }
 
-        public static HttpRequestWithBody put(string url)
+        public static HttpRequest put(string url)
         {
-            return new HttpRequestWithBody(HttpMethod.Put, url);
+            return new HttpRequest(HttpMethod.Put, url);
         }
     }
 }

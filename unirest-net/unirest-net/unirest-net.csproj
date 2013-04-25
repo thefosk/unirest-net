@@ -57,24 +57,7 @@
     <Compile Include="src\http\HttpClientHelper.cs" />
     <Compile Include="src\http\HttpResponse.cs" />
     <Compile Include="src\http\Unirest.cs" />
-    <Compile Include="src\request\BaseRequest.cs" />
     <Compile Include="src\request\HttpRequest.cs" />
-    <Compile Include="src\request\HttpRequestWithBody.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="src\http\async\Callback.java" />
-    <Content Include="src\http\async\RequestThread.java" />
-    <Content Include="src\http\HttpClientHelper.java" />
-    <Content Include="src\http\HttpDeleteWithBody.java" />
-    <Content Include="src\http\HttpPatchWithBody.java" />
-    <Content Include="src\http\JsonNode.java" />
-    <Content Include="src\http\utils\MapUtil.java" />
-    <Content Include="src\http\utils\URLParamEncoder.java" />
-    <Content Include="src\request\BaseRequest.java" />
-    <Content Include="src\request\body\MultipartBody.java" />
-    <Content Include="src\request\body\RequestBodyEntity.java" />
-    <Content Include="src\request\HttpRequest.java" />
-    <Content Include="src\request\HttpRequestWithBody.java" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

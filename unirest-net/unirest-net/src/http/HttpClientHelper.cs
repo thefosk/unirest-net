@@ -16,7 +16,7 @@ namespace unirest_net.http
     {
         private const string USER_AGENT = "unirest-java/1.0";
 
-        public static HttpResponse<T> Request<T>(BaseRequest request)
+        public static HttpResponse<T> Request<T>(HttpRequest request)
         {
             var responseTask = RequestHelper(request);
             Task.WaitAll(responseTask);
@@ -25,7 +25,7 @@ namespace unirest_net.http
             return new HttpResponse<T>(response);
         }
 
-        public static Task<HttpResponse<T>> RequestAsync<T>(BaseRequest request)
+        public static Task<HttpResponse<T>> RequestAsync<T>(HttpRequest request)
         {
             var responseTask = RequestHelper(request);
             return Task<HttpResponse<T>>.Factory.StartNew(() =>
@@ -35,7 +35,7 @@ namespace unirest_net.http
                 });
         }
 
-        private static Task<HttpResponseMessage> RequestHelper(BaseRequest request)
+        private static Task<HttpResponseMessage> RequestHelper(HttpRequest request)
         {
             if (!request.Headers.ContainsKey("user-agent"))
             {
@@ -50,9 +50,9 @@ namespace unirest_net.http
                 msg.Headers.Add(header.Key, header.Value);
             }
 
-            if (request is HttpRequestWithBody)
+            if (request.Body.Any())
             {
-                msg.Content = new StreamContent((request as HttpRequestWithBody).Body ?? new MemoryStream());
+                msg.Content = request.Body;
             }
 
             return client.SendAsync(msg);

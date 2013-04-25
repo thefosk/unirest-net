@@ -19,31 +19,35 @@ namespace unirest_net.http
         {
             Headers = new Dictionary<string, string>();
             Code = (int) response.StatusCode;
-            var streamTask = response.Content.ReadAsStreamAsync();
-            Task.WaitAll(streamTask);
-            Raw = streamTask.Result;
+
+            if (response.Content != null)
+            {
+                var streamTask = response.Content.ReadAsStreamAsync();
+                Task.WaitAll(streamTask);
+                Raw = streamTask.Result;
+
+                if (typeof(T) == typeof(String))
+                {
+                    var stringTask = response.Content.ReadAsStringAsync();
+                    Task.WaitAll(stringTask);
+                    Body = (T)(object)stringTask.Result;
+                }
+                else if (typeof(Stream).IsAssignableFrom(typeof(T)))
+                {
+                    Body = (T)(object)Raw;
+                }
+                else
+                {
+                    var serializer = new JavaScriptSerializer();
+                    var stringTask = response.Content.ReadAsStringAsync();
+                    Task.WaitAll(stringTask);
+                    Body = serializer.Deserialize<T>(stringTask.Result);
+                }
+            }
 
             foreach (var header in response.Headers)
             {
                 Headers.Add(header.Key, header.Value.First());
-            }
-
-            if (typeof(T) == typeof(String))
-            {
-                var stringTask = response.Content.ReadAsStringAsync();
-                Task.WaitAll(stringTask);
-                Body = (T)(object)stringTask.Result;
-            }
-            else if (typeof(Stream).IsAssignableFrom(typeof(T)))
-            {
-                Body = (T)(object)Raw;
-            }
-            else
-            {
-                var serializer = new JavaScriptSerializer();
-                var stringTask = response.Content.ReadAsStringAsync();
-                Task.WaitAll(stringTask);
-                Body = serializer.Deserialize<T>(stringTask.Result);
             }
         }
     }

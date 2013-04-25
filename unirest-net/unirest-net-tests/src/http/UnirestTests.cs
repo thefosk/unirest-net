@@ -37,11 +37,5 @@ namespace unirest_net.http
             Unirest.patch("http://localhost").URL.OriginalString.Should().Be("http://localhost");
             Unirest.put("http://localhost").URL.OriginalString.Should().Be("http://localhost");
         }
-
-        [Test]
-        public static void Basic_Test()
-        {
-
-        }
     }
 }
