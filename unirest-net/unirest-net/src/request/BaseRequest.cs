@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-
+using System.Threading.Tasks;
 using unirest_net.http;
 
 namespace unirest_net.request
@@ -54,14 +54,29 @@ namespace unirest_net.request
             return HttpClientHelper.Request<String>(this);
         }
 
+        public Task<HttpResponse<String>> asStringAsync()
+        {
+            return HttpClientHelper.RequestAsync<String>(this);
+        }
+
         public HttpResponse<Stream> asBinary()
         {
             return HttpClientHelper.Request<Stream>(this);
         }
 
+        public Task<HttpResponse<Stream>> asBinaryAsync()
+        {
+            return HttpClientHelper.RequestAsync<Stream>(this);
+        }
+
         public HttpResponse<T> asJson<T>()
         {
             return HttpClientHelper.Request<T>(this);
+        }
+
+        public Task<HttpResponse<T>> asJsonAsync<T>()
+        {
+            return HttpClientHelper.RequestAsync<T>(this);
         }
     }
 }

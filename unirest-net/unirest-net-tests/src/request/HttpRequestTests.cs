@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
 using NUnit;
 using NUnit.Framework;
 using FluentAssertions;
@@ -182,6 +182,60 @@ namespace unicorn_net_tests.request
             Delete.asJson<String>().Body.Should().NotBeBlank();
             Patch.asJson<String>().Body.Should().NotBeBlank();
             Put.asJson<String>().Body.Should().NotBeBlank();
+        }
+
+        [Test]
+        public static void HttpRequest_Should_Return_String_Async()
+        {
+            var Get = new HttpRequest(HttpMethod.Get, "http://www.google.com").asStringAsync();
+            var Post = new HttpRequest(HttpMethod.Post, "http://www.google.com").asStringAsync();
+            var Delete = new HttpRequest(HttpMethod.Delete, "http://www.google.com").asStringAsync();
+            var Patch = new HttpRequest(new HttpMethod("PATCH"), "http://www.google.com").asStringAsync();
+            var Put = new HttpRequest(HttpMethod.Put, "http://www.google.com").asStringAsync();
+
+            Task.WaitAll(Get, Post, Delete, Patch, Put);
+
+            Get.Result.Body.Should().NotBeBlank();
+            Post.Result.Body.Should().NotBeBlank();
+            Delete.Result.Body.Should().NotBeBlank();
+            Patch.Result.Body.Should().NotBeBlank();
+            Put.Result.Body.Should().NotBeBlank();
+        }
+
+        [Test]
+        public static void HttpRequest_Should_Return_Stream_Async()
+        {
+            var Get = new HttpRequest(HttpMethod.Get, "http://www.google.com").asBinaryAsync();
+            var Post = new HttpRequest(HttpMethod.Post, "http://www.google.com").asBinaryAsync();
+            var Delete = new HttpRequest(HttpMethod.Delete, "http://www.google.com").asBinaryAsync();
+            var Patch = new HttpRequest(new HttpMethod("PATCH"), "http://www.google.com").asBinaryAsync();
+            var Put = new HttpRequest(HttpMethod.Put, "http://www.google.com").asBinaryAsync();
+
+            Task.WaitAll(Get, Post, Delete, Patch, Put);
+
+            Get.Result.Body.Should().NotBeNull();
+            Post.Result.Body.Should().NotBeNull();
+            Delete.Result.Body.Should().NotBeNull();
+            Patch.Result.Body.Should().NotBeNull();
+            Put.Result.Body.Should().NotBeNull();
+        }
+
+        [Test]
+        public static void HttpRequest_Should_Return_Parsed_JSON_Async()
+        {
+            var Get = new HttpRequest(HttpMethod.Get, "http://www.google.com").asJsonAsync<String>();
+            var Post = new HttpRequest(HttpMethod.Post, "http://www.google.com").asJsonAsync<String>();
+            var Delete = new HttpRequest(HttpMethod.Delete, "http://www.google.com").asJsonAsync<String>();
+            var Patch = new HttpRequest(new HttpMethod("PATCH"), "http://www.google.com").asJsonAsync<String>();
+            var Put = new HttpRequest(HttpMethod.Put, "http://www.google.com").asJsonAsync<String>();
+
+            Task.WaitAll(Get, Post, Delete, Patch, Put);
+
+            Get.Result.Body.Should().NotBeBlank();
+            Post.Result.Body.Should().NotBeBlank();
+            Delete.Result.Body.Should().NotBeBlank();
+            Patch.Result.Body.Should().NotBeBlank();
+            Put.Result.Body.Should().NotBeBlank();
         }
     }
 }

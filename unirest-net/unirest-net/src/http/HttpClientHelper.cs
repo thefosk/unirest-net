@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -17,6 +18,25 @@ namespace unirest_net.http
 
         public static HttpResponse<T> Request<T>(BaseRequest request)
         {
+            var responseTask = RequestHelper(request);
+            Task.WaitAll(responseTask);
+            var response = responseTask.Result;
+
+            return new HttpResponse<T>(response);
+        }
+
+        public static Task<HttpResponse<T>> RequestAsync<T>(BaseRequest request)
+        {
+            var responseTask = RequestHelper(request);
+            return Task<HttpResponse<T>>.Factory.StartNew(() =>
+                {
+                    Task.WaitAll(responseTask);
+                    return new HttpResponse<T>(responseTask.Result);
+                });
+        }
+
+        private static Task<HttpResponseMessage> RequestHelper(BaseRequest request)
+        {
             if (!request.Headers.ContainsKey("user-agent"))
             {
                 request.Headers.Add("user-agent", USER_AGENT);
@@ -32,14 +52,10 @@ namespace unirest_net.http
 
             if (request is HttpRequestWithBody)
             {
-                msg.Content = new StreamContent((request as HttpRequestWithBody).Body);
+                msg.Content = new StreamContent((request as HttpRequestWithBody).Body ?? new MemoryStream());
             }
 
-            var responseTask = client.SendAsync(msg);
-            Task.WaitAll(responseTask);
-            var response = responseTask.Result;
-
-            return new HttpResponse<T>(response);
+            return client.SendAsync(msg);
         }
     }
 }

@@ -19,6 +19,10 @@ namespace unirest_net.request
         // Should add overload that takes URL object
         public HttpRequestWithBody(HttpMethod method, string url) : base(method, url)
         {
+            if (method == HttpMethod.Get)
+            {
+                throw new ArgumentException("Get requests cannot have a body");
+            }
         }
     }
 }
