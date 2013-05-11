@@ -17,7 +17,7 @@ namespace unirest_net.http
             return new HttpRequest(HttpMethod.Get, url);
         }
 
-        public static HttpRequest Post(string url)
+        public static HttpRequest post(string url)
         {
             return new HttpRequest(HttpMethod.Post, url);
         }
